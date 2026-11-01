@@ -123,9 +123,8 @@ int main(int argc, char **argv) {
   mt19937 random_number_generator(rd());
   uniform_real_distribution<double> distribution(0.0, 1.0);
 
-  // TODO:
-  // The population of particles should be evenly divided over the number of
-  // MPI processes.
+  // evenly divide the population over the MPI processes, with the last
+  // process taking any remainder
   int process_population = population_size / number_processes;
 
   if (process_id == number_processes - 1) {
@@ -185,11 +184,6 @@ int main(int argc, char **argv) {
     cout << "\tc2: " << c2 << endl;
   }
   for (int32_t epoch = 0; epoch < max_epochs; epoch++) {
-    // TODO:
-    // modify the following so that each process calculates its own best
-    // particle so we can later send these to the other processes to calculate
-    // the overall global best
-
     // compute the fitness for each particle and update the
     // particle local bests and global bests
 
@@ -216,12 +210,8 @@ int main(int argc, char **argv) {
       }
     }
 
-    // TODO:
-    // After each process computes the fitness for its slice of the particles,
-    // use MPI_Allgather to send each slice's best fitness values and best
-    // particle values to all other processes. Use these combined values to
-    // determine the actual global best particle fitness and its parameters to
-    // use when generating the next set of particle positions
+    // share each process's best fitness and particle with all processes so
+    // every process knows the overall global best
 
     MPI_Allgather(&proc_global_best_fitness, 1, MPI_DOUBLE,
                   process_best_fitnesses.data(), 1, MPI_DOUBLE, MPI_COMM_WORLD);

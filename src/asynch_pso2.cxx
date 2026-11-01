@@ -287,18 +287,8 @@ int main(int argc, char **argv) {
   int comm_sz; /* number of processes  */
   int my_rank; /* process rank         */
 
-  // Initialize the command line arguments on every process
   MPI_Init(&argc, &argv);
-
-  // Get the number of processes in MPI_COMM_WORLD, and put
-  // it in the 'comm_sz" variable; ie., how many processes
-  // are running this program (the same as what you put in the
-  //-np argument).
   MPI_Comm_size(MPI_COMM_WORLD, &comm_sz);
-
-  // Get the rank of this particular process in MPI_COMM_WORLD,
-  // and put it in the 'my_rank' variable -- ie., what number
-  // is this process
   MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
 
   vector<string> arguments = vector<string>(argv, argv + argc);

@@ -162,10 +162,6 @@ int main(int argc, char **argv) {
   mt19937 random_number_generator(rd());
   uniform_real_distribution<double> distribution(0.0, 1.0);
 
-  // TODO:
-  // The population of particles should be evenly divided over the number of MPI
-  // processes.
-
   // initialize the particles for particle swarm optimization
   vector<vector<double>> particles(population_size,
                                    vector<double>(n_parameters));
@@ -207,11 +203,6 @@ int main(int argc, char **argv) {
   cout << "\tc2: " << c2 << endl;
 
   for (int32_t epoch = 0; epoch < max_epochs; epoch++) {
-    // TODO:
-    // modify the following so that each process calculates its own best
-    // particle so we can later send these to the other processes to calculate
-    // the overall global best
-
     // compute the fitness for each particle and update the
     // particle local bests and global bests
     for (int32_t i = 0; i < population_size; i++) {
@@ -236,13 +227,6 @@ int main(int argc, char **argv) {
         print_particle(particles[i], velocities[i], local_best_fitnesses[i]);
       }
     }
-
-    // TODO:
-    // After each process computes the fitness for its slice of the particles,
-    // use MPI_Allgather to send each slice's best fitness values and best
-    // particle values to all other processes. Use these combined values to
-    // determine the actual global best particle fitness and its parameters to
-    // use when generating the next set of particle positions
 
     // move each particle according to the PSO algorithm
     for (int32_t i = 0; i < population_size; i++) {

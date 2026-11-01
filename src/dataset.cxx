@@ -58,11 +58,9 @@ Dataset::Dataset(const string &filename) {
 
 
 Dataset::~Dataset() {
-    /**********
-     * TODO: Implement the destructor
-     **********/
-
-    /********** ENDTODO **********/
+    for (Sample *sample : samples) {
+        delete sample;
+    }
 }
 
 int32_t Dataset::sample_size() {
@@ -75,23 +73,45 @@ int32_t Dataset::sample_size() {
 }
 
 void Dataset::get_statistics(vector<double> &sample_means, vector<double> &sample_stds) {
-    /**********
-     * TODO: Resize the input sample means and calculate
-     * the mean for each sample value.
-     ***********/
+    int32_t n_values = sample_size();
+    if (n_values < 0) n_values = 0;
 
-    /********** ENDTODO **********/
+    sample_means.assign(n_values, 0.0);
+    sample_stds.assign(n_values, 0.0);
+    if (samples.size() == 0) return;
+
+    for (Sample *sample : samples) {
+        for (int32_t i = 0; i < n_values; i++) {
+            sample_means[i] += (*sample)[i];
+        }
+    }
+    for (int32_t i = 0; i < n_values; i++) {
+        sample_means[i] /= samples.size();
+    }
+
+    // population standard deviation
+    for (Sample *sample : samples) {
+        for (int32_t i = 0; i < n_values; i++) {
+            double diff = (*sample)[i] - sample_means[i];
+            sample_stds[i] += diff * diff;
+        }
+    }
+    for (int32_t i = 0; i < n_values; i++) {
+        sample_stds[i] = sqrt(sample_stds[i] / samples.size());
+    }
 }
 
 void Dataset::normalize(const vector<double> &sample_means, vector<double> &sample_stds) {
-    /**********
-     * TODO: Normalize the samples using z-score normalization
-     * with the provided means and standard deviations.
-     ***********/
-
-    //cout << "normalized samples: " << endl;
-
-    /********** ENDTODO **********/
+    for (Sample *sample : samples) {
+        for (uint32_t i = 0; i < sample->size(); i++) {
+            // a constant value has no spread, so just center it
+            if (sample_stds[i] == 0.0) {
+                (*sample)[i] = 0.0;
+            } else {
+                (*sample)[i] = ((*sample)[i] - sample_means[i]) / sample_stds[i];
+            }
+        }
+    }
 }
 
 void Dataset::shuffle() {

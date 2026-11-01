@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.8)
-project (DSCI_650_HW3)
+project (particle_swarm_optimization)
 
 SET (PLATFORM 64)
 set(CMAKE_CXX_STANDARD 20)
