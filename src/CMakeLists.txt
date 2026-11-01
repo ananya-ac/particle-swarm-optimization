@@ -1,0 +1,10 @@
+add_subdirectory(objectives)
+add_executable(particle_swarm_optimization particle_swarm_optimization.cxx)
+add_executable(particle_swarm_optimization_mpi particle_swarm_optimization_mpi.cxx)
+add_executable(asynch_pso asynch_pso.cxx)
+add_executable(asynch_pso2 asynch_pso2.cxx)
+
+target_link_libraries(particle_swarm_optimization objectives)
+target_link_libraries(particle_swarm_optimization_mpi objectives ${MPI_LIBRARIES} ${MPI_EXTRA})
+target_link_libraries(asynch_pso objectives ${MPI_LIBRARIES} ${MPI_EXTRA})
+target_link_libraries(asynch_pso2 objectives ${MPI_LIBRARIES} ${MPI_EXTRA})
